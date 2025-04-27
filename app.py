@@ -72,7 +72,8 @@ def home():
             <div x-data="{ 
                 activeTab: 'dashboard',
                 newIdea: { title: '', description: '', status: 'New' },
-                newTransaction: { amount: '', category: 'Personal', description: '' }
+                newTransaction: { amount: '', category: 'Personal', description: '' },
+                editingIdea: null
             }" class="container mx-auto px-4 py-8">
                 <!-- Navigation -->
                 <nav class="glass-card rounded-xl mb-8">
@@ -101,15 +102,15 @@ def home():
                 <!-- Dashboard Tab -->
                 <div x-show="activeTab === 'dashboard'" class="space-y-8">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="glass-card p-8 rounded-xl hover-glow transition-all duration-300">
+                        <div @click="activeTab = 'banking'" class="glass-card p-8 rounded-xl hover-glow transition-all duration-300 cursor-pointer">
                             <h3 class="text-lg font-medium text-gray-400">Total Balance</h3>
                             <p class="text-4xl font-bold gradient-text mt-2">${{ total_balance }}</p>
                         </div>
-                        <div class="glass-card p-8 rounded-xl hover-glow transition-all duration-300">
+                        <div @click="activeTab = 'ideas'" class="glass-card p-8 rounded-xl hover-glow transition-all duration-300 cursor-pointer">
                             <h3 class="text-lg font-medium text-gray-400">Active Ideas</h3>
                             <p class="text-4xl font-bold text-green-400 mt-2">{{ active_ideas_count }}</p>
                         </div>
-                        <div class="glass-card p-8 rounded-xl hover-glow transition-all duration-300">
+                        <div @click="activeTab = 'banking'" class="glass-card p-8 rounded-xl hover-glow transition-all duration-300 cursor-pointer">
                             <h3 class="text-lg font-medium text-gray-400">Recent Transactions</h3>
                             <p class="text-4xl font-bold text-blue-400 mt-2">{{ recent_transactions_count }}</p>
                         </div>
@@ -180,7 +181,8 @@ def home():
                                 </div>
                                 <p class="text-gray-400 mt-3">{{ idea.description }}</p>
                                 <div class="mt-4 flex space-x-4">
-                                    <button class="text-indigo-400 hover:text-indigo-300 transition-colors">Edit</button>
+                                    <button @click="editingIdea = {{ loop.index0 }}; newIdea = { title: '{{ idea.title }}', description: '{{ idea.description }}', status: '{{ idea.status }}' }" 
+                                        class="text-indigo-400 hover:text-indigo-300 transition-colors">Edit</button>
                                     <button @click="fetch('/delete_idea', {
                                         method: 'POST',
                                         headers: {
